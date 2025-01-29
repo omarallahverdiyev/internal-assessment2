@@ -1,0 +1,75 @@
+lib/
+├── main.dart                   # Entry point
+├── core/                       # Core functionalities shared across the app
+│   ├── services/               # Backend services (API calls, Firebase interactions)
+│   │   ├── auth_service.dart
+│   │   ├── product_service.dart
+│   │   ├── order_service.dart
+│   └── utilities/              # Helper classes and utility functions
+│       ├── validators.dart
+│       ├── constants.dart
+│       ├── theme.dart
+├── features/                   # Feature-based structure
+│   ├── auth/                   # Authentication module
+│   │   ├── data/
+│   │   │   └── auth_repository.dart
+│   │   ├── presentation/
+│   │   │   ├── auth_screen.dart
+│   │   │   ├── login_form.dart
+│   │   │   └── google_sign_in_button.dart
+│   │   └── logic/
+│   │       └── auth_bloc.dart
+│   ├── buyer/                  # Buyer-specific features
+│   │   ├── data/
+│   │   │   └── buyer_repository.dart
+│   │   ├── presentation/
+│   │   │   ├── main_screen.dart
+│   │   │   ├── home_screen.dart
+│   │   │   ├── cart_screen.dart
+│   │   │   └── order_history_screen.dart
+│   │   └── logic/
+│   │       └── cart_bloc.dart
+│   ├── seller/                 # Seller-specific features
+│   │   ├── data/
+│   │   │   └── seller_repository.dart
+│   │   ├── presentation/
+│   │   │   ├── main_screen.dart
+│   │   │   ├── all_orders_screen.dart
+│   │   │   ├── all_products_screen.dart
+│   │   └── logic/
+│   │       └── product_visibility_bloc.dart
+│   ├── product/                # Product-related features
+│   │   ├── data/
+│   │   │   ├── product_model.dart
+│   │   │   └── product_repository.dart
+│   │   ├── presentation/
+│   │   │   ├── product_grid.dart
+│   │   │   ├── product_details_screen.dart
+│   │   │   └── category_filter.dart
+│   │   └── logic/
+│   │       └── product_bloc.dart
+│   ├── search/                 # Search features (text and image search)
+│   │   ├── presentation/
+│   │   │   ├── search_screen.dart
+│   │   │   └── image_search_screen.dart
+│   │   └── logic/
+│   │       └── search_bloc.dart
+│   └── checkout/               # Checkout and order placement
+│       ├── presentation/
+│       │   ├── checkout_screen.dart
+│       │   ├── delivery_details_screen.dart
+│       │   └── thanks_screen.dart
+│       └── logic/
+│           └── checkout_bloc.dart
+├── widgets/                    # Reusable widgets
+│   ├── modal_bottom_sheet.dart
+│   ├── custom_button.dart
+│   └── custom_text_field.dart
+├── localization/               # Localization files
+│   ├── en.json
+│   └── es.json
+└── tests/                      # Unit and widget tests
+    ├── features/
+    │   └── auth_test.dart
+    └── widgets/
+        └── cart_widget_test.dart

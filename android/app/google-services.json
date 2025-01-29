@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "325661304946",
+    "project_id": "internalassessmentapp-d0e2d",
+    "storage_bucket": "internalassessmentapp-d0e2d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325661304946:android:067cb9ddc21b610a80faeb",
+        "android_client_info": {
+          "package_name": "com.example.ia.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQicN4OmXZQDvZKpC_TjQVvYHD5n3RfNc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
