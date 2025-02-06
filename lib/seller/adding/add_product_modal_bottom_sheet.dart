@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:internal_assessment_app/product/data/dummy_product_data.dart';
 import 'package:internal_assessment_app/product/data/product_model.dart';
+import 'package:internal_assessment_app/seller/adding/firebase_upload/image_upload.dart';
+import 'package:internal_assessment_app/seller/adding/firebase_upload/product_upload.dart';
+import 'package:internal_assessment_app/seller/adding/image_item.dart';
 import 'package:internal_assessment_app/seller/adding/image_selection.dart';
-import 'package:internal_assessment_app/seller/adding/multi_select_dialog.dart';
+import 'package:internal_assessment_app/seller/adding/multi_select_dialog_category.dart';
+import 'package:internal_assessment_app/seller/adding/multi_select_dialog_color.dart';
 
 class AddProductModalBottomSheet extends StatefulWidget {
   const AddProductModalBottomSheet({super.key});
@@ -43,7 +46,7 @@ class _AddProductModalBottomSheetState
     final Set<ProductColor> results = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return MultiSelectDialog(
+          return MultiSelectDialogColor(
               title: 'Select Colors',
               items: ProductColor.values.toSet(),
               selectedItems: _selectedProductColors,
@@ -60,7 +63,7 @@ class _AddProductModalBottomSheetState
     final Set<Category> results = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return MultiSelectDialog(
+          return MultiSelectDialogCategory(
               title: 'Select Categories',
               items: Category.values
                   .where((category) =>
@@ -80,6 +83,8 @@ class _AddProductModalBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    late List<ImageItem> toBeUploadedImageItems;
+
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -137,11 +142,7 @@ class _AddProductModalBottomSheetState
                   ),
                   ImageSelection(
                     onImagesSelected: (images) {
-                      toBeUploadedImages = images
-                          .map((imageItem) => Image(
-                                image: imageItem.image,
-                              ))
-                          .toList();
+                      toBeUploadedImageItems = images;
                       toBeAddedProduct.images = images.map((imageItem) => imageItem.key).toList();
                     },
                   ),
@@ -199,8 +200,9 @@ class _AddProductModalBottomSheetState
                         Switch.adaptive(
                           value: _isPrivateLabelController,
                           onChanged: (value) {
-                            _isPrivateLabelController =
-                                !_isPrivateLabelController;
+                            setState(() {
+                              _isPrivateLabelController = value;
+                            });
                           },
                         ),
                       ],
@@ -213,7 +215,9 @@ class _AddProductModalBottomSheetState
                         Switch.adaptive(
                           value: _isVisibleController,
                           onChanged: (value) {
-                            _isVisibleController = !_isVisibleController;
+                            setState(() {
+                              _isVisibleController = value;
+                            });
                           },
                         ),
                       ],
@@ -234,7 +238,8 @@ class _AddProductModalBottomSheetState
                             _isPrivateLabelController;
                         toBeAddedProduct.isVisible = _isVisibleController;
                         toBeAddedProduct.dateAdded = DateTime.now();
-                        allProducts.add(toBeAddedProduct);
+                        ProductUpload().uploadToFirebase(context, toBeAddedProduct, mounted);
+                        ImageUpload().uploadToFirebase(context, toBeUploadedImageItems, mounted, toBeAddedProduct.key);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

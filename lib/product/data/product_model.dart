@@ -97,9 +97,10 @@ class Product {
       required this.title,
       required this.isPrivateLabel,
       required this.dateAdded,
+      String? key,
       this.totalSales = 0})
-      : dateUpdated = dateAdded;
-  String key = const Uuid().v4();
+      : dateUpdated = dateAdded, key = key ?? const Uuid().v4();
+  final String key;
   List<String> images; //fire
   String manufacturerCode;
   Set<ProductColor> availableColors;
@@ -118,26 +119,27 @@ class Product {
       'key': key,
       'images': images,
       'manufacturerCode': manufacturerCode,
-      'availableColors': availableColors.map((color) => color.toMap(availableColors)).toList(),
+      'availableColors': availableColors.map((color) => color.polishColorName).toList(),
       'incrementValue': incrementValue,
       'price': price,
-      'categories': categories.map((category) => category.toMap(categories)).toList(),
+      'categories': categories.map((category) => category.polishCategory).toList(),
       'isVisible': isVisible,
-      'title': title.toMap(title),
+      'title': title.polishTitle,
       'isPrivateLabel': isPrivateLabel,
-      'dateAdded': dateAdded.toIso8601String(),
-      'dateUpdated': dateUpdated.toIso8601String(),
+      'dateAdded': Timestamp.fromDate(dateAdded),
+      'dateUpdated': Timestamp.fromDate(dateUpdated),
       'totalSales': totalSales,
     };
   }
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
+        key: map['key'],
         images: List<String>.from(map['images']),
         manufacturerCode: map['manufacturerCode'] as String,
         availableColors: (map['availableColors'] as List).map((color) {
           return ProductColor.values.firstWhere(
-            (e) => e.name == color,
+            (e) => e.polishColorName == color,
             orElse: () => ProductColor.other,
             //ideally put some proper report sent about such errors
           );
@@ -145,18 +147,20 @@ class Product {
         incrementValue: map['incrementValue'] as int,
         price: (map['price'] as num).toDouble(),
         categories: (map['categories'] as List).map((category) {
-          return Category.values.firstWhere((e) => e.name == category,
+          return Category.values.firstWhere((e) => e.polishCategory == category,
               orElse: () => Category.arrivals
               //proper error handling necessary
               );
         }).toSet(),
         isVisible: map['isVisible'] as bool,
-        title: ProductTitle.values.firstWhere((e) => e.name == map['title'],
+        title: ProductTitle.values.firstWhere((e) => e.polishTitle == map['title'],
             orElse: () => ProductTitle.inny),
         isPrivateLabel: map['isPrivateLabel'] as bool,
         dateAdded: (map['dateAdded'] as Timestamp).toDate(),
         totalSales: map['totalSales'] as int? ?? 0);
   }
+
+
 
   String get polishTitle => title.polishTitle;
 }

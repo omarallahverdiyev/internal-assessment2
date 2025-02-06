@@ -1,6 +1,5 @@
 import 'package:internal_assessment_app/order/orderItem/order_item_model.dart';
 import 'package:internal_assessment_app/product/data/product_model.dart';
-import 'package:uuid/uuid.dart';
 
 class Cart {
 
@@ -22,12 +21,11 @@ class Cart {
     items.add(item);
   }
 
-  final String cartId = const Uuid().v4();
-  final List<OrderItem> items;
+  final List<OrderItem> orderItems;
   final double totalPrice;
-  late final double totalPriceAfterTaxes = _calculatePriceAfterTaxes(items);
+  late final double totalPriceAfterTaxes = _calculatePriceAfterTaxes(orderItems);
 
 
-  Cart({required this.items})
-      : totalPrice = items.fold(0, (sum, item) => sum + item.totalPrice);
+  Cart({required this.orderItems})
+      : totalPrice = orderItems.fold(0, (sum, item) => sum + item.totalPrice);
 }

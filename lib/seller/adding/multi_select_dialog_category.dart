@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:internal_assessment_app/product/data/product_model.dart';
 
-class MultiSelectDialog extends StatefulWidget {
-  const MultiSelectDialog(
+class MultiSelectDialogCategory extends StatefulWidget {
+  const MultiSelectDialogCategory(
       {super.key,
       required this.title,
       required this.items,
@@ -9,16 +10,16 @@ class MultiSelectDialog extends StatefulWidget {
       required this.itemNames});
 
   final String title;
-  final Set<dynamic> items;
-  final Set<dynamic> selectedItems;
+  final Set<Category> items;
+  final Set<Category> selectedItems;
   final Set<String> itemNames;
 
   @override
-  State<MultiSelectDialog> createState() => _MultiSelectDialogState();
+  State<MultiSelectDialogCategory> createState() => _MultiSelectDialogCategoryState();
 }
 
-class _MultiSelectDialogState extends State<MultiSelectDialog> {
-  late Set<dynamic> tempSelectedItems;
+class _MultiSelectDialogCategoryState extends State<MultiSelectDialogCategory> {
+  late Set<Category> tempSelectedItems;
 
   @override
   void initState() {

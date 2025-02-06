@@ -37,7 +37,7 @@ class _ImageSelectionState extends State<ImageSelection> {
                       setState(
                         () {
                           _images
-                              .add(ImageItem(image: FileImage(File(image.path))));
+                              .add(ImageItem(image: File(image.path)));
                               widget.onImagesSelected(_images);
                         },
                       );
@@ -51,7 +51,7 @@ class _ImageSelectionState extends State<ImageSelection> {
                       setState(() {
                         for (var image in images) {
                           _images
-                              .add(ImageItem(image: FileImage(File(image.path))));
+                              .add(ImageItem(image: File(image.path)));
                               widget.onImagesSelected(_images);
                         }
                       });
@@ -85,7 +85,7 @@ class _ImageSelectionState extends State<ImageSelection> {
             Stack(
               key: ValueKey(image.key),
               children: [
-                Image(image: image.image, width: 160, height: 200),
+                Image(image: FileImage(image.image), width: 160, height: 200),
                 Positioned(
                   right: 0,
                   child: IconButton(

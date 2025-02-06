@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:internal_assessment_app/product/data/product_model.dart';
 import 'package:uuid/uuid.dart';
@@ -18,20 +20,24 @@ class OrderItem {
     };
   }
 
-  factory OrderItem.fromMap(Map<String, dynamic> map) {
+  static Future<OrderItem> fromMap(Map<String, dynamic> map) async {
+    Product? product = await productFinder(map['productKey'] ?? '');
     return OrderItem(
-      product: map['id'] ?? '',
-      selectedColor: map['selectedColor'] ?? '',
-      quantity: (map['quantity'] ?? 0).toInteger(),
+      product: product!,
+      selectedColor: ProductColor.values.firstWhere(
+        (e) => e.name == map['selectedColor'],
+        orElse: () => ProductColor.other,
+        //ideally put some proper report sent about such errors
+      ),
+      quantity: (map['quantity'] ?? 0).toInt(),
     );
   }
 
-  Future<Product?> productFinder(String productKey) async {
+  static Future<Product?> productFinder(String productKey) async {
     var doc = await FirebaseFirestore.instance
         .collection('products')
         .doc(productKey)
         .get();
-
     if (!doc.exists) return null;
     return Product.fromMap(doc.data()!);
   }
