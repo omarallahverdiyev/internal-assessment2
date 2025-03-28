@@ -4,12 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internal_assessment_app/auth/presentation/auth_screen.dart';
 import 'package:internal_assessment_app/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:internal_assessment_app/utils/notification_service.dart';
 
 var kColorScheme =
     ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 191, 32, 32));
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await NotificationService.initialize();
 
   if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp(

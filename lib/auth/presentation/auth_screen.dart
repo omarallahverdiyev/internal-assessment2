@@ -105,7 +105,7 @@ Future<void> _signInWithGoogle() async {
     
     final user = userCredential.user;
     if (user != null) {
-      if (user.uid == "1AuYvEGdVVPTvOnczIrcnHWV2Q23") {
+      if (user.uid == "1AuYvEGdVVPTvOnczIrcnHWV2Q2") {
         if (!mounted) return;
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const SellerTabs()));

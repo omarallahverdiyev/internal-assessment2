@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:internal_assessment_app/buyer/domain/cart_provider.dart';
 import 'package:internal_assessment_app/buyer/presentation/cart/cart_screen.dart';
 import 'package:internal_assessment_app/buyer/presentation/categories_screen.dart';
 import 'package:internal_assessment_app/buyer/presentation/home_screen.dart';
@@ -30,13 +29,12 @@ class _TabsState extends ConsumerState<BuyerTabs> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncOrderItems = ref.watch(cartProvider);
     if (_selectedIndex == 0) {
       activePage = const HomeScreen();
     } else if (_selectedIndex == 1) {
       activePage = const CategoriesScreen();
     } else if (_selectedIndex == 2){
-      activePage = CartScreen(asyncOrderItems: asyncOrderItems);  //i need to find the instance of user's cart so i can place it in the constructor;
+      activePage = const CartScreen();  //i need to find the instance of user's cart so i can place it in the constructor;
     } else if (_selectedIndex == 3) {
       activePage = const MyAccountScreen();
     }

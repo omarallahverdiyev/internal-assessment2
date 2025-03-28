@@ -14,18 +14,18 @@ class OrderItem {
   Map<String, dynamic> toMap() {
     return {
       'productKey': product.key,
-      'selectedColor': selectedColor.toString(),
+      'selectedColor': selectedColor.polishColorName,
       'quantity': quantity,
       'key': key,
     };
   }
 
   static Future<OrderItem> fromMap(Map<String, dynamic> map) async {
-    Product? product = await productFinder(map['productKey'] ?? '');
+    Product? product =  await productFinder(map['productKey'] ?? '');
     return OrderItem(
       product: product!,
       selectedColor: ProductColor.values.firstWhere(
-        (e) => e.name == map['selectedColor'],
+        (e) => e.polishColorName == map['selectedColor'],
         orElse: () => ProductColor.other,
         //ideally put some proper report sent about such errors
       ),

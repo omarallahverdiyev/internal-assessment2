@@ -17,7 +17,9 @@ class ProductListView extends ConsumerWidget {
       dataBuilder: (data) {
         return Center(
           child: ListTile(
-            leading: Image.network(data.first),
+            leading: data.isNotEmpty
+              ? Image.network(data.first)
+              : const Icon(Icons.image_not_supported),
             title: Text(listTileTitle),
             subtitle: Text(
               product.categories

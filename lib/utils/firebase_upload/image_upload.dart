@@ -11,7 +11,7 @@ class ImageUpload {
       bool isMounted,
       String productKey) async {
     try {
-      Reference productFolderRef = _storage.ref().child(productKey);
+      Reference productFolderRef = _storage.ref().child('images/$productKey');
 
       for (ImageItem imageItem in toBeUploadedImageItems) {
         // Create a reference for the specific image in the product folder
@@ -19,13 +19,14 @@ class ImageUpload {
         await imageRef.putFile(imageItem.image);
         
       }
-      
     } catch (e) {
       if (isMounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to upload images: $e')),
         );
       }
+              print('Error uploading images: $e');
+
     }
   }
 }

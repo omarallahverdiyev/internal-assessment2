@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:internal_assessment_app/product/data/product_model.dart';
-import 'package:internal_assessment_app/seller/adding/firebase_upload/image_upload.dart';
-import 'package:internal_assessment_app/seller/adding/firebase_upload/product_upload.dart';
+import 'package:internal_assessment_app/utils/firebase_upload/image_upload.dart';
+import 'package:internal_assessment_app/utils/firebase_upload/product_upload.dart';
 import 'package:internal_assessment_app/seller/adding/image_item.dart';
 import 'package:internal_assessment_app/seller/adding/image_selection.dart';
 import 'package:internal_assessment_app/seller/adding/multi_select_dialog_category.dart';
@@ -21,7 +21,7 @@ class _AddProductModalBottomSheetState
   final GlobalKey<FormState> _formGlobalKey = GlobalKey<FormState>();
   bool _isPrivateLabelController = false;
   bool _isVisibleController = true;
-  late List<Image> toBeUploadedImages;
+  List<ImageItem> toBeUploadedImageItems = [];
 
   Product toBeAddedProduct = Product(
     images: [],
@@ -35,6 +35,7 @@ class _AddProductModalBottomSheetState
     isVisible: true,
     dateAdded: DateTime.now(),
   );
+
   ProductTitle _selectedProductTitle = ProductTitle.komplet;
   Set<ProductColor> _selectedProductColors = {};
   Set<Category> _selectedCategories = {};
@@ -74,17 +75,14 @@ class _AddProductModalBottomSheetState
               itemNames: categoryNames.toSet());
         });
 
-        setState(() {
-          toBeAddedProduct.categories = results;
-          _selectedCategories = results;
-        });
-    
+    setState(() {
+      toBeAddedProduct.categories = results;
+      _selectedCategories = results;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    late List<ImageItem> toBeUploadedImageItems;
-
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -142,8 +140,11 @@ class _AddProductModalBottomSheetState
                   ),
                   ImageSelection(
                     onImagesSelected: (images) {
-                      toBeUploadedImageItems = images;
-                      toBeAddedProduct.images = images.map((imageItem) => imageItem.key).toList();
+                      setState(() {
+                        toBeUploadedImageItems = images;
+                        toBeAddedProduct.images =
+                            images.map((imageItem) => imageItem.key).toList();
+                      });
                     },
                   ),
                   TextFormField(
@@ -238,8 +239,13 @@ class _AddProductModalBottomSheetState
                             _isPrivateLabelController;
                         toBeAddedProduct.isVisible = _isVisibleController;
                         toBeAddedProduct.dateAdded = DateTime.now();
-                        ProductUpload().uploadToFirebase(context, toBeAddedProduct, mounted);
-                        ImageUpload().uploadToFirebase(context, toBeUploadedImageItems, mounted, toBeAddedProduct.key);
+                        ProductUpload().uploadToFirebase(
+                            context, toBeAddedProduct, mounted);
+                        ImageUpload().uploadToFirebase(
+                            context,
+                            toBeUploadedImageItems,
+                            mounted,
+                            toBeAddedProduct.key);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

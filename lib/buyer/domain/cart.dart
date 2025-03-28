@@ -17,10 +17,6 @@ class Cart {
     return totalPriceAfterTaxes;
   }
 
-  void _addItem(items, OrderItem item) {
-    items.add(item);
-  }
-
   final List<OrderItem> orderItems;
   final double totalPrice;
   late final double totalPriceAfterTaxes = _calculatePriceAfterTaxes(orderItems);

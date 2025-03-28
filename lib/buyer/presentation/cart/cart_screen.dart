@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internal_assessment_app/buyer/domain/cart.dart';
+import 'package:internal_assessment_app/buyer/domain/cart_provider.dart';
 import 'package:internal_assessment_app/buyer/presentation/cart/cart_item.dart';
-import 'package:internal_assessment_app/order/orderItem/order_item_model.dart';
+import 'package:internal_assessment_app/buyer/presentation/cart/checkout.dart';
 import 'package:internal_assessment_app/utils/async_value_ui.dart';
 import 'package:intl/intl.dart';
 
-class CartScreen extends StatelessWidget {
-  const CartScreen({super.key, required this.asyncOrderItems});
-
-  final AsyncValue<List<OrderItem>> asyncOrderItems;
+class CartScreen extends ConsumerWidget {
+  const CartScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    late List<OrderItem> orderItems;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncOrderItems = ref.watch(cartProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Stubbs business'),
       ),
       body: asyncOrderItems.buildUI(
         dataBuilder: (data) {
-          orderItems = data;
-          final cart = Cart(orderItems: orderItems);
+          final cart = Cart(orderItems: data);
           return Stack(children: [
             ListView.builder(
-                itemCount: orderItems.length,
+                itemCount: data.length,
                 itemBuilder: (context, index) => CartItem(
-                    orderItem: orderItems[index]) //the widget for order item,
+                    orderItem: data[index]) //the widget for order item,
                 ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -40,9 +38,12 @@ class CartScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             const Text('Netto'),
-                            const Spacer(flex: 1,),
+                            const Spacer(
+                              flex: 1,
+                            ),
                             Text(
-                              NumberFormat.currency(symbol: '\$').format(cart.totalPrice),
+                              NumberFormat.currency(symbol: '\$')
+                                  .format(cart.totalPrice),
                             ),
                           ],
                         ),
@@ -51,11 +52,32 @@ class CartScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             const Text('Brutto'),
-                            Text(NumberFormat.currency(symbol: '\$').format(cart.totalPriceAfterTaxes)),
-                            Text(cart.totalPriceAfterTaxes.toString())
+                            Text(
+                              NumberFormat.currency(symbol: '\$')
+                                  .format(cart.totalPriceAfterTaxes),
+                            ),
+                            Text(
+                              cart.totalPriceAfterTaxes.toString(),
+                            )
                           ],
                         ),
-                      )
+                      ),
+                      Expanded(
+                          child: Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Checkout(cart: cart),
+                                ),
+                              );
+                            },
+                            child: const Icon(Icons.shopping_cart_checkout),
+                          )
+                        ],
+                      )),
                     ],
                   ),
                 ),
